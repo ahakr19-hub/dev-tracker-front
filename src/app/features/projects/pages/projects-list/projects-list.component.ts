@@ -51,6 +51,18 @@ export class ProjectsListComponent implements OnInit, OnDestroy {
     ).subscribe(count => {
       this.countHistoryProjects = count;
     });
+
+    // Real-time project list sync: when SocketService receives `access:revoked`
+    // and filters the BehaviorSubject, this subscription ensures the list
+    // page reflects the removal instantly without a manual refresh.
+    this.projectService.projects$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(projectList => {
+      if (projectList !== null) {
+        this.projects = projectList;
+        this.countProjects = projectList.length;
+      }
+    });
   }
 
   ngOnDestroy(): void {

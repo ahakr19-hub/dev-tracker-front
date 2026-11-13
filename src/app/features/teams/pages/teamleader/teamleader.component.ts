@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { TeamsService } from 'src/app/core/services/teams.service';
 import { SocketService } from 'src/app/core/services/socket.service';
+import { ProjectService } from 'src/app/core/services/project.service';
 import Swal from 'sweetalert2';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -24,16 +25,16 @@ interface LimitError {
   styleUrls: ['./teamleader.component.scss'],
 })
 export class TeamleaderComponent implements OnInit, OnDestroy, AfterViewInit {
-  email        = '';
+  email = '';
   members: any[] = [];
   isLoadingMembers = false;
-  isSending        = false;
+  isSending = false;
 
   // ── [3] Project Selector Modal state ───────────────────────────────────────
-  showProjectModal   = false;
+  showProjectModal = false;
   adminProjects: AdminProject[] = [];
   selectedProjectIds = new Set<string>();
-  isLoadingProjects  = false;
+  isLoadingProjects = false;
 
   // ── [4] Limit-Exceeded Alert Panel state ───────────────────────────────────
   limitError: LimitError | null = null;
@@ -47,7 +48,8 @@ export class TeamleaderComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private _teamsService: TeamsService,
     private _socketService: SocketService,
-  ) {}
+    private _projectService: ProjectService,
+  ) { }
 
   ngOnInit(): void {
     this.loadTeamMembers();
@@ -68,7 +70,7 @@ export class TeamleaderComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -83,21 +85,20 @@ export class TeamleaderComponent implements OnInit, OnDestroy, AfterViewInit {
       this.showToast('error', 'Enter an email first');
       return;
     }
-    this.showProjectModal   = true;
-    this.isLoadingProjects  = true;
+    this.showProjectModal = true;
+    this.isLoadingProjects = true;
     this.selectedProjectIds = new Set<string>();
 
     this._teamsService.getAdminProjects().subscribe({
       next: (res: any) => {
-        this.adminProjects     = res.data?.projects || [];
+        this.adminProjects = res.data?.projects || [];
         this.isLoadingProjects = false;
-        // Animate modal entrance
         setTimeout(() => {
           const el = this.projectModalRef?.nativeElement;
           if (el) {
             gsap.fromTo(el,
               { opacity: 0, scale: 0.92, y: 20 },
-              { opacity: 1, scale: 1,    y: 0, duration: 0.35, ease: 'back.out(1.5)' }
+              { opacity: 1, scale: 1, y: 0, duration: 0.35, ease: 'back.out(1.5)' }
             );
           }
         }, 0);
@@ -161,9 +162,9 @@ export class TeamleaderComponent implements OnInit, OnDestroy, AfterViewInit {
         // ── [4] Detect plan-limit error (HTTP 422) ──────────────────────────
         if (err.status === 422) {
           this.limitError = {
-            message:      msg,
+            message: msg,
             currentCount: err.error?.currentCount ?? 0,
-            limit:        err.error?.limit        ?? 3,
+            limit: err.error?.limit ?? 3,
           };
           // GSAP entrance for the error panel
           setTimeout(() => {
@@ -174,11 +175,11 @@ export class TeamleaderComponent implements OnInit, OnDestroy, AfterViewInit {
               this.limitTl
                 .fromTo(panel,
                   { opacity: 0, y: -16, scale: 0.96 },
-                  { opacity: 1, y:   0, scale: 1, duration: 0.4, ease: 'back.out(1.4)' }
+                  { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: 'back.out(1.4)' }
                 )
                 .fromTo(panel.querySelectorAll('.limit-panel__row'),
                   { x: -10, opacity: 0 },
-                  { x: 0,   opacity: 1, stagger: 0.07, duration: 0.25, ease: 'power2.out' },
+                  { x: 0, opacity: 1, stagger: 0.07, duration: 0.25, ease: 'power2.out' },
                   '-=0.15'
                 );
             }
@@ -208,7 +209,7 @@ export class TeamleaderComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isLoadingMembers = true;
     this._teamsService.getTeamMembers().subscribe({
       next: (res: any) => {
-        this.members          = res.data?.members || [];
+        this.members = res.data?.members || [];
         this.isLoadingMembers = false;
       },
       error: () => { this.isLoadingMembers = false; }
@@ -217,11 +218,11 @@ export class TeamleaderComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onRemoveMember(memberId: string, memberName: string): void {
     Swal.fire({
-      title: 'Are you sure?',
-      text: `You are about to remove ${memberName} from the team.`,
+      title: 'Terminate Member?',
+      text: `You are about to terminate ${memberName} and revoke all their project access.`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, Remove!',
+      confirmButtonText: 'Yes, Terminate!',
       cancelButtonText: 'Abort',
       background: 'rgba(15, 23, 42, 0.95)',
       color: '#fff',
@@ -230,13 +231,18 @@ export class TeamleaderComponent implements OnInit, OnDestroy, AfterViewInit {
       customClass: { popup: 'glass-alert-popup' }
     }).then((result) => {
       if (result.isConfirmed) {
-        this._teamsService.removeMember(memberId).subscribe({
+        this._teamsService.terminateMember(memberId).subscribe({
           next: () => {
-            this.showToast('success', `${memberName} has been removed.`);
+            this.showToast('success', `${memberName} has been terminated and their access revoked.`);
             this.loadTeamMembers();
+            // Invalidate the project cache so the admin's project list
+            // no longer includes any projects this member may have been
+            // sharing back — the next getAllProjects() call will fetch
+            // fresh data from the server.
+            this._projectService.invalidateCache();
           },
           error: (err: any) => {
-            this.showAlertNotification('error', 'Operation Failed', err.error?.message || 'Could not remove member');
+            this.showAlertNotification('error', 'Operation Failed', err.error?.message || 'Could not terminate member');
           }
         });
       }
@@ -244,8 +250,8 @@ export class TeamleaderComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onPermissionChange(memberId: string, key: string, event: any): void {
-    const newValue   = event.target.checked;
-    const member     = this.members.find(m => m.id === memberId);
+    const newValue = event.target.checked;
+    const member = this.members.find(m => m.id === memberId);
     const memberName = member ? member.name : 'Developer';
 
     Swal.fire({
@@ -291,8 +297,8 @@ export class TeamleaderComponent implements OnInit, OnDestroy, AfterViewInit {
       background: 'rgba(15, 23, 42, 0.9)', color: '#fff',
       didOpen: (toast) => {
         toast.style.backdropFilter = 'blur(10px)';
-        toast.style.border         = '1px solid rgba(255, 255, 255, 0.1)';
-        toast.style.borderRadius   = '12px';
+        toast.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+        toast.style.borderRadius = '12px';
       },
     }).fire({ icon, title });
   }
@@ -301,14 +307,14 @@ export class TeamleaderComponent implements OnInit, OnDestroy, AfterViewInit {
     const alertColor = icon === 'warning' ? '#f59e0b' : '#ef4444';
     Swal.fire({
       title: `<span style="color: ${alertColor}; font-family: 'Plus Jakarta Sans', sans-serif; text-transform: uppercase; letter-spacing: 2px; font-weight:800;">${title}</span>`,
-      html:  `<span style="color: #cbd5e1; font-size: 0.9rem;">${text}</span>`,
+      html: `<span style="color: #cbd5e1; font-size: 0.9rem;">${text}</span>`,
       icon, background: 'rgba(15, 23, 42, 0.95)',
       backdrop: `rgba(0,0,0,0.4)`, confirmButtonColor: '#3b82f6',
       customClass: { popup: 'glass-alert-popup' },
       didOpen: (popup) => {
         popup.style.backdropFilter = 'blur(15px)';
-        popup.style.border         = `1px solid ${alertColor}44`;
-        popup.style.borderRadius   = '24px';
+        popup.style.border = `1px solid ${alertColor}44`;
+        popup.style.borderRadius = '24px';
       },
     });
   }

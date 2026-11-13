@@ -123,6 +123,15 @@ export class SocketService {
 
     // ── Team events ───────────────────────────────────────────────────────────
 
+    // Emitted by the server to the ADMIN's room after a successful termination.
+    // Invalidate the project cache so the admin's next visit to the projects
+    // page forces a fresh server fetch (terminated member's shared projects
+    // will no longer be included in the query result).
+    this.socket?.on('member:terminated', (data: any) => {
+      console.log('[Socket] member:terminated received', data);
+      this.projectService.invalidateCache();
+    });
+
     this.socket?.on('new_invitation', (data: any) => {
       // Card is delivered by notification:received (DB-backed).
       // Only show the toast here.

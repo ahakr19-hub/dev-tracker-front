@@ -35,7 +35,7 @@ export class MasterhomeComponent implements OnInit, AfterViewInit, OnDestroy {
   countHistoryProjects: number = 0;
   developerName = localStorage.getItem('userName');
   chartData: any[] = [];
-  colorScheme: any = { domain: ['#00f0ff'] };
+  colorScheme: any = { domain: ['#3b82f6', '#00f0ff', '#a855f7', '#10b981', '#f59e0b'] };
 
   // [4] Blurred analytics preview state
   trialStatus: TrialStatus | null = null;
@@ -84,6 +84,20 @@ export class MasterhomeComponent implements OnInit, AfterViewInit, OnDestroy {
       this.countHistoryProjects = count;
       this.cdr.markForCheck();
       this.animateCounters('.counter-history', this.countHistoryProjects);
+    });
+
+    // React to real-time project cache changes (e.g. access:revoked via socket).
+    // When SocketService filters revoked project IDs from the BehaviorSubject,
+    // this subscription picks up the new array and refreshes the dashboard
+    // immediately — no page reload or manual HTTP call required.
+    this.projectService.projects$.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe(projectList => {
+      if (projectList !== null) {
+        this.projects = projectList.slice(0, 3);
+        this.countProjects = projectList.length;
+        this.cdr.markForCheck();
+      }
     });
 
     // Start feature tour for first-time users after DOM has settled

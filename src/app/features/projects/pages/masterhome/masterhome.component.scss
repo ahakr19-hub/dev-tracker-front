@@ -1,9 +1,9 @@
 // Design Tokens
 $bg-dark: #07080a;
-$card-bg-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
-$card-bg: rgba(13, 15, 20, 0.7);
-$card-border: 1px solid rgba(255, 255, 255, 0.06);
-$card-border-hover: 1px solid rgba(59, 130, 246, 0.35);
+$card-bg-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.015) 100%);
+$card-bg: rgba(15, 19, 28, 0.85);
+$card-border: 1px solid rgba(255, 255, 255, 0.08);
+$card-border-hover: 1px solid rgba(59, 130, 246, 0.4);
 
 $primary-blue: #3b82f6;
 $cyber-cyan: #00f0ff;
@@ -12,27 +12,27 @@ $neon-purple: #a855f7;
 $neon-orange: #f59e0b;
 
 $text-primary: #f8fafc;
-$text-secondary: #94a3b8;
-$text-muted: #64748b;
+$text-secondary: #cbd5e1;
+$text-muted: #94a3b8;
 
 ::ng-deep body {
   background-color: $bg-dark !important;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  font-family: 'Inter', 'Outfit', sans-serif;
+  font-family: 'Inter', 'Outfit', system-ui, -apple-system, sans-serif;
 }
 
 // ─── Glowing Ambient Backgrounds ─────────────────────────────────────────────
 .glow-blob {
   position: absolute;
-  width: 600px;
-  height: 600px;
+  width: 650px;
+  height: 650px;
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.08;
-  filter: blur(140px);
+  opacity: 0.12;
+  filter: blur(150px);
   transition: all 1s ease-in-out;
 
   &--primary {
@@ -56,11 +56,11 @@ $text-muted: #64748b;
   background-color: $bg-dark;
   color: $text-primary;
   overflow-x: hidden;
-  padding: 120px 4% 60px;
+  padding: 110px 4% 60px;
   box-sizing: border-box;
 
   @media (max-width: 768px) {
-    padding: 100px 16px 40px;
+    padding: 95px 16px 40px;
   }
 }
 
@@ -136,30 +136,31 @@ $text-muted: #64748b;
     .badge-custom {
       display: inline-flex;
       align-items: center;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 99px;
-      padding: 5px 12px;
-      font-size: 0.72rem;
-      font-weight: 500;
+      padding: 5px 14px;
+      font-size: 0.76rem;
+      font-weight: 600;
       color: $text-secondary;
       letter-spacing: 0.01em;
+      backdrop-filter: blur(8px);
 
       &--online {
         .pulse-dot {
-          width: 6px;
-          height: 6px;
+          width: 7px;
+          height: 7px;
           border-radius: 50%;
           background-color: $success-green;
-          margin-right: 6px;
-          box-shadow: 0 0 8px $success-green;
+          margin-right: 7px;
+          box-shadow: 0 0 10px $success-green;
           animation: pulse-green 2s infinite;
         }
       }
 
       &--secured {
         i {
-          font-size: 0.8rem;
+          font-size: 0.82rem;
         }
       }
     }
@@ -179,8 +180,8 @@ $text-muted: #64748b;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       color: $text-secondary;
       padding: 10px 18px;
       border-radius: 14px;
@@ -196,8 +197,8 @@ $text-muted: #64748b;
       }
 
       &:hover {
-        background: rgba(255, 255, 255, 0.05);
-        border-color: rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.2);
         color: #ffffff;
         transform: translateY(-2px);
       }
@@ -215,12 +216,12 @@ $text-muted: #64748b;
       font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+        box-shadow: 0 6px 22px rgba(59, 130, 246, 0.6);
         filter: brightness(1.1);
       }
 
@@ -234,7 +235,7 @@ $text-muted: #64748b;
 // ─── Stats Grid & Metric Cards ───────────────────────────────────────────────
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: 20px;
   width: 100%;
 
@@ -249,73 +250,78 @@ $text-muted: #64748b;
 
   .stat-card {
     position: relative;
-    background: $card-bg;
-    border: $card-border;
+    background: linear-gradient(145deg, rgba(22, 27, 39, 0.85) 0%, rgba(13, 16, 24, 0.9) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.09);
     border-radius: 22px;
     padding: 24px;
     display: flex;
     align-items: flex-start;
     gap: 16px;
     overflow: hidden;
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     &__glow {
       position: absolute;
-      top: -30px;
-      right: -30px;
-      width: 80px;
-      height: 80px;
+      top: -40px;
+      right: -40px;
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
-      filter: blur(35px);
-      opacity: 0.15;
+      filter: blur(40px);
+      opacity: 0.25;
       pointer-events: none;
       transition: all 0.3s ease;
     }
 
     &:hover {
-      border-color: rgba(255, 255, 255, 0.12);
-      transform: translateY(-3px);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+      border-color: rgba(0, 240, 255, 0.35);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45), 0 0 20px rgba(59, 130, 246, 0.15);
 
       .stat-card__glow {
-        opacity: 0.3;
+        opacity: 0.45;
         transform: scale(1.3);
       }
     }
 
     .icon-bg {
-      width: 48px;
-      height: 48px;
+      width: 50px;
+      height: 50px;
       border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       flex-shrink: 0;
 
       &.blue {
-        background: rgba($primary-blue, 0.08);
+        background: rgba($primary-blue, 0.15);
         color: $cyber-cyan;
-        border: 1px solid rgba($primary-blue, 0.15);
+        border: 1px solid rgba($primary-blue, 0.3);
+        box-shadow: 0 0 14px rgba($primary-blue, 0.25);
       }
 
       &.green {
-        background: rgba($success-green, 0.08);
-        color: $success-green;
-        border: 1px solid rgba($success-green, 0.15);
+        background: rgba($success-green, 0.15);
+        color: #34d399;
+        border: 1px solid rgba($success-green, 0.3);
+        box-shadow: 0 0 14px rgba($success-green, 0.25);
       }
 
       &.purple {
-        background: rgba($neon-purple, 0.08);
+        background: rgba($neon-purple, 0.15);
         color: #c084fc;
-        border: 1px solid rgba($neon-purple, 0.15);
+        border: 1px solid rgba($neon-purple, 0.3);
+        box-shadow: 0 0 14px rgba($neon-purple, 0.25);
       }
 
       &.orange {
-        background: rgba($neon-orange, 0.08);
-        color: $neon-orange;
-        border: 1px solid rgba($neon-orange, 0.15);
+        background: rgba($neon-orange, 0.15);
+        color: #fbbf24;
+        border: 1px solid rgba($neon-orange, 0.3);
+        box-shadow: 0 0 14px rgba($neon-orange, 0.25);
       }
     }
 
@@ -325,26 +331,26 @@ $text-muted: #64748b;
       min-width: 0;
 
       h3 {
-        font-size: 1.65rem;
+        font-size: 1.75rem;
         font-weight: 800;
-        color: #ffffff;
-        margin: 0 0 3px;
+        color: #ffffff !important;
+        margin: 0 0 4px;
         letter-spacing: -0.02em;
         display: flex;
         align-items: baseline;
 
         .unit-suffix {
-          font-size: 0.9rem;
-          font-weight: 500;
-          color: $text-secondary;
+          font-size: 0.95rem;
+          font-weight: 600;
+          color: $text-secondary !important;
           margin-left: 2px;
         }
       }
 
       .stat-label {
-        font-size: 0.8rem;
-        color: $text-secondary;
-        font-weight: 500;
+        font-size: 0.82rem;
+        color: $text-secondary !important;
+        font-weight: 600;
         margin: 0 0 8px;
       }
 
@@ -352,17 +358,17 @@ $text-muted: #64748b;
         display: inline-flex;
         align-items: center;
         gap: 4px;
-        font-size: 0.72rem;
-        font-weight: 500;
+        font-size: 0.75rem;
+        font-weight: 600;
 
         i {
-          font-size: 0.75rem;
+          font-size: 0.78rem;
         }
 
-        &.trend-info { color: #38bdf8; }
-        &.trend-success { color: #4ade80; }
-        &.trend-purple { color: #c084fc; }
-        &.trend-orange { color: #fbbf24; }
+        &.trend-info { color: #38bdf8 !important; }
+        &.trend-success { color: #34d399 !important; }
+        &.trend-purple { color: #d8b4fe !important; }
+        &.trend-orange { color: #fde047 !important; }
       }
     }
 
@@ -389,18 +395,19 @@ $text-muted: #64748b;
 // ─── Card Wrappers (Common Styles) ───────────────────────────────────────────
 .recent-projects,
 .chart-wrapper {
-  background: $card-bg;
-  border: $card-border;
+  background: linear-gradient(145deg, rgba(18, 23, 34, 0.85) 0%, rgba(11, 14, 21, 0.9) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 26px;
   padding: 28px;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
   transition: all 0.3s ease;
 
   &:hover {
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.14);
   }
 }
 
@@ -412,7 +419,7 @@ $text-muted: #64748b;
   margin-bottom: 24px;
 
   h2 {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: #ffffff;
     margin: 0;
@@ -425,15 +432,15 @@ $text-muted: #64748b;
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    font-size: 0.82rem;
+    font-size: 0.84rem;
     font-weight: 600;
-    color: $primary-blue;
+    color: #38bdf8;
     text-decoration: none;
     cursor: pointer;
     transition: all 0.2s ease;
 
     i {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       transition: transform 0.2s ease;
     }
 
@@ -441,7 +448,7 @@ $text-muted: #64748b;
       color: $cyber-cyan;
 
       i {
-        transform: translateX(3px);
+        transform: translateX(4px);
       }
     }
   }
@@ -459,10 +466,10 @@ $text-muted: #64748b;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 20px;
+  padding: 18px 22px;
   border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.03);
-  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.025);
   text-decoration: none;
   cursor: pointer;
   overflow: hidden;
@@ -471,7 +478,7 @@ $text-muted: #64748b;
   &__hover-bg {
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba($primary-blue, 0.06) 0%, rgba(255, 255, 255, 0.01) 100%);
+    background: linear-gradient(90deg, rgba($primary-blue, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%);
     opacity: 0;
     transition: opacity 0.3s ease;
     z-index: 0;
@@ -488,8 +495,8 @@ $text-muted: #64748b;
   // Live status indicator with pulse animation
   .status-indicator {
     position: relative;
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     flex-shrink: 0;
 
     .status-dot {
@@ -499,9 +506,9 @@ $text-muted: #64748b;
       border-radius: 50%;
       background: $text-muted;
 
-      &.active { background: $cyber-cyan; }
-      &.paused { background: $neon-orange; }
-      &.completed { background: $success-green; }
+      &.active { background: $cyber-cyan; box-shadow: 0 0 10px $cyber-cyan; }
+      &.paused { background: $neon-orange; box-shadow: 0 0 10px $neon-orange; }
+      &.completed { background: $success-green; box-shadow: 0 0 10px $success-green; }
     }
 
     .status-pulse {
@@ -515,11 +522,11 @@ $text-muted: #64748b;
       z-index: -1;
 
       &.active {
-        box-shadow: 0 0 10px $cyber-cyan;
+        box-shadow: 0 0 12px $cyber-cyan;
         animation: pulse-green 2s infinite;
       }
       &.paused {
-        box-shadow: 0 0 10px $neon-orange;
+        box-shadow: 0 0 12px $neon-orange;
         animation: pulse-orange 2.2s infinite;
       }
     }
@@ -527,8 +534,8 @@ $text-muted: #64748b;
 
   .project-details {
     h4 {
-      font-size: 0.95rem;
-      font-weight: 600;
+      font-size: 1rem;
+      font-weight: 700;
       color: #ffffff;
       margin: 0 0 4px;
       letter-spacing: -0.01em;
@@ -538,24 +545,25 @@ $text-muted: #64748b;
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      gap: 6px;
-      font-size: 0.78rem;
+      gap: 8px;
+      font-size: 0.82rem;
       color: $text-secondary;
 
       .client-name {
         display: inline-flex;
         align-items: center;
-        font-weight: 500;
+        font-weight: 600;
+        color: #cbd5e1;
       }
 
       .separator {
-        color: rgba(255, 255, 255, 0.15);
+        color: rgba(255, 255, 255, 0.2);
       }
 
       .time-stamp {
         display: inline-flex;
         align-items: center;
-        color: $text-muted;
+        color: #94a3b8;
       }
     }
   }
@@ -567,31 +575,32 @@ $text-muted: #64748b;
     .project-meta {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
 
       .rate-badge {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        color: #ffffff;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(0, 240, 255, 0.08) 100%);
+        border: 1px solid rgba(59, 130, 246, 0.25);
+        color: #38bdf8;
         font-weight: 700;
-        font-size: 0.8rem;
-        padding: 4px 10px;
+        font-size: 0.82rem;
+        padding: 5px 12px;
         border-radius: 10px;
       }
 
       .arrow-circle {
-        width: 28px;
-        height: 28px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.02);
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
         display: flex;
         align-items: center;
         justify-content: center;
-        color: $text-muted;
+        color: #94a3b8;
         transition: all 0.25s ease;
 
         i {
-          font-size: 1.15rem;
+          font-size: 1.2rem;
           transition: transform 0.25s ease;
         }
       }
@@ -599,19 +608,20 @@ $text-muted: #64748b;
   }
 
   &:hover {
-    border-color: rgba(255, 255, 255, 0.08);
-    transform: translateX(4px);
-    background: rgba(255, 255, 255, 0.02);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border-color: rgba(59, 130, 246, 0.35);
+    transform: translateX(6px);
+    background: rgba(255, 255, 255, 0.045);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), 0 0 20px rgba(59, 130, 246, 0.1);
 
     &__hover-bg {
       opacity: 1;
     }
 
     .project-actions-wrapper .project-meta .arrow-circle {
-      background: $primary-blue;
+      background: linear-gradient(135deg, $primary-blue 0%, #1d4ed8 100%);
+      border-color: transparent;
       color: #ffffff;
-      box-shadow: 0 0 10px rgba($primary-blue, 0.4);
+      box-shadow: 0 0 14px rgba($primary-blue, 0.5);
 
       i {
         transform: translateX(2px);
@@ -634,28 +644,29 @@ $text-muted: #64748b;
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.75rem;
-    color: $text-muted;
+    color: #38bdf8;
     margin-bottom: 16px;
   }
 
   h4 {
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 1.05rem;
+    font-weight: 700;
     color: #ffffff;
     margin: 0 0 6px;
   }
 
   p {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     max-width: 320px;
     line-height: 1.5;
     margin: 0 0 16px;
-    color: $text-muted;
+    color: #94a3b8;
   }
 }
 
@@ -665,8 +676,8 @@ $text-muted: #64748b;
   flex-direction: column;
 
   &:hover {
-    border-color: rgba($primary-blue, 0.25);
-    box-shadow: 0 10px 30px -15px rgba($primary-blue, 0.2);
+    border-color: rgba($primary-blue, 0.3);
+    box-shadow: 0 10px 30px -10px rgba($primary-blue, 0.25);
   }
 }
 
@@ -679,18 +690,18 @@ $text-muted: #64748b;
   .chart-title-group {
     display: flex;
     align-items: center;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     font-weight: 600;
-    color: $text-secondary;
+    color: #cbd5e1;
 
     i {
-      font-size: 1rem;
+      font-size: 1.05rem;
     }
   }
 
   .chart-value {
     color: #ffffff;
-    font-size: 1.5rem;
+    font-size: 1.65rem;
     font-weight: 800;
     letter-spacing: -0.02em;
 
@@ -698,9 +709,9 @@ $text-muted: #64748b;
       display: inline-flex;
       align-items: center;
       gap: 2px;
-      font-size: 0.72rem;
+      font-size: 0.76rem;
       color: $success-green;
-      font-weight: 500;
+      font-weight: 600;
       margin-left: 4px;
     }
   }
@@ -714,9 +725,9 @@ $text-muted: #64748b;
 
   ::ng-deep {
     .ngx-charts text {
-      fill: $text-muted !important;
-      font-size: 10px;
-      font-weight: 500;
+      fill: #cbd5e1 !important;
+      font-size: 11px !important;
+      font-weight: 600 !important;
     }
 
     .domain {
@@ -726,7 +737,7 @@ $text-muted: #64748b;
     .bar {
       cursor: pointer;
       transition: opacity 0.3s ease;
-      filter: drop-shadow(0 4px 8px rgba($primary-blue, 0.15));
+      filter: drop-shadow(0 4px 12px rgba($primary-blue, 0.3));
 
       &:hover {
         opacity: 0.85;
